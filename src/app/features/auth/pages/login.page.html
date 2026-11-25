@@ -1,0 +1,59 @@
+<ion-content [fullscreen]="true">
+  <main class="auth-container">
+    <section class="auth-panel" aria-labelledby="login-title">
+      <ion-text color="primary">
+        <p class="eyebrow">Control electoral</p>
+      </ion-text>
+      <h1 id="login-title">Iniciar sesión</h1>
+      <p class="description">Ingresa con tu cédula y clave asignada.</p>
+
+      <form [formGroup]="form" (ngSubmit)="ingresar()" novalidate>
+        <ion-item>
+          <ion-input
+            label="Cédula"
+            labelPlacement="stacked"
+            formControlName="cedula"
+            type="text"
+            inputmode="numeric"
+            autocomplete="username"
+            maxlength="10"
+            placeholder="10 dígitos"
+            aria-describedby="cedula-error"
+          />
+        </ion-item>
+        @if (form.controls.cedula.touched && form.controls.cedula.invalid) {
+        <ion-note id="cedula-error" class="field-error" color="danger" aria-live="polite">
+          @if (form.controls.cedula.hasError('required')) { Ingresa tu cédula. } @else { Ingresa una cédula ecuatoriana
+          válida. }
+        </ion-note>
+        }
+
+        <ion-item>
+          <ion-input
+            label="Clave"
+            labelPlacement="stacked"
+            formControlName="password"
+            type="password"
+            autocomplete="current-password"
+            aria-describedby="password-error"
+          />
+        </ion-item>
+        @if (form.controls.password.touched && form.controls.password.hasError('required')) {
+        <ion-note id="password-error" class="field-error" color="danger" aria-live="polite">
+          Ingresa tu clave.
+        </ion-note>
+        } @if (error(); as mensajeError) {
+        <ion-note class="form-error" color="danger" role="alert">{{ mensajeError }}</ion-note>
+        }
+
+        <ion-button class="submit-button" type="submit" expand="block" [disabled]="auth.cargando()">
+          @if (auth.cargando()) {
+          <ion-spinner name="crescent" slot="start" />
+          Ingresando... } @else { Ingresar }
+        </ion-button>
+      </form>
+
+      <ion-button fill="clear" routerLink="/auth/recuperar-password"> ¿Olvidaste tu clave? </ion-button>
+    </section>
+  </main>
+</ion-content>

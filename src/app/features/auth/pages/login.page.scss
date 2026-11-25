@@ -1,0 +1,49 @@
+.auth-container {
+  display: grid;
+  min-height: 100%;
+  place-items: center;
+  padding: 24px;
+}
+
+.auth-panel {
+  width: min(100%, 440px);
+  padding: 32px 28px;
+  border: 1px solid var(--ion-color-step-150);
+  border-radius: 20px;
+  background: var(--ion-background-color);
+  box-shadow: 0 16px 48px rgb(0 0 0 / 8%);
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+h1 {
+  margin: 0;
+  font-size: 1.8rem;
+}
+
+.description {
+  margin: 8px 0 24px;
+  color: var(--ion-color-medium);
+}
+
+ion-item {
+  margin-bottom: 8px;
+  --border-radius: 10px;
+}
+
+.field-error,
+.form-error {
+  display: block;
+  margin: 0 8px 12px;
+}
+
+.submit-button {
+  margin-top: 20px;
+  min-height: 48px;
+}

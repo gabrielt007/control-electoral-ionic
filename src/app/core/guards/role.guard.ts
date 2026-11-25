@@ -13,7 +13,7 @@ export function roleGuard(rolesPermitidos: readonly RolUsuario[]): CanActivateFn
     await auth.esperarInicializacion();
     const perfil = auth.perfil();
     if (!auth.autenticado() || !perfil) {
-      return router.parseUrl('/home');
+      return router.parseUrl('/auth/login');
     }
 
     if (auth.debeCambiarPassword()) {

@@ -10,7 +10,7 @@ export const passwordChangedGuard: CanActivateFn = async () => {
 
   await auth.esperarInicializacion();
   if (!auth.autenticado() || !auth.perfil()) {
-    return router.parseUrl('/home');
+    return router.parseUrl('/auth/login');
   }
 
   if (auth.debeCambiarPassword()) {
