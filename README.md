@@ -282,16 +282,16 @@ fuera del control de versiones.
 
 ## 5. Guía de verificación funcional y credenciales de prueba
 
-No hay cuentas de prueba ni usuarios Auth incluidos en el repositorio. Use un
-proyecto Supabase aislado y cuentas creadas específicamente para pruebas. Los
-valores siguientes son placeholders, no credenciales utilizables:
+Las cuentas de prueba deben existir en un proyecto Supabase aislado; no se
+incluyen en `seed.sql`. Por seguridad, el README no almacena cédulas ni
+contraseñas reales. Sustituye estos placeholders únicamente en material privado
+de la demostración:
 
-| Campo | Placeholder |
-| --- | --- |
-| Cédula de prueba válida | `<CEDULA_DE_PRUEBA_DE_10_DIGITOS>` |
-| Correo de prueba accesible | `<CORREO_DE_PRUEBA>` |
-| Clave inicial entregada al usuario | `<CLAVE_INICIAL_DE_PRUEBA>` |
-| Nueva clave de prueba | `<NUEVA_CLAVE_DE_PRUEBA>` |
+| Rol | Cédula | Contraseña | Observaciones |
+| :--- | :--- | :--- | :--- |
+| `PROVINCIAL` | `<CEDULA_PROVINCIAL_DE_PRUEBA>` | `<CLAVE_PROVINCIAL_DE_PRUEBA>` | Acceso a consolidado provincial y creación de coordinadores de recinto. |
+| `RECINTO` | `<CEDULA_RECINTO_DE_PRUEBA>` | `<CLAVE_RECINTO_DE_PRUEBA>` | Acceso a gestión de su recinto y creación/asignación de veedores. |
+| `VEEDOR` | `<CEDULA_VEEDOR_DE_PRUEBA>` | Clave personalizada tras primer ingreso | Acceso a sus JRV asignadas para registro y corrección de actas con foto y GPS. |
 
 No use cédulas, correos, claves o fotos de personas reales. La clave inicial
 configurada en las funciones debe entregarse por un canal de prueba controlado;
