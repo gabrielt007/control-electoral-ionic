@@ -44,8 +44,8 @@ Condiciones técnicas:
 * **Aceptación/rechazo y verificación humana:** Aceptado tras analizar la ponderación de la rúbrica y los tiempos reales del equipo.
 
 ## Trazabilidad
-* Commit de ADR: `[Enlace o hash al commit en docs/adr/ADR-006-soporte-offline-opcional.md]`
-* Commit de implementación: `[N/A en línea base o commit de extensión si aplica]`
+* Commit de ADR: `900fd86` — agregó `docs/adr/ADR-006-soporte-offline-opcional.md`.
+* Commit de implementación: No aplica para R10; la persistencia local y la sincronización offline se difirieron. No se encontró un commit que implemente esa mejora en el historial revisado.
 
 ## Consenso del equipo
 * **Emilia Alejandra Tana Puga:** Propuso `IndexedDB` y `Capacitor Network` para almacenamiento temporal y sincronización posterior evitando pérdida de datos sin Internet.

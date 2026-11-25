@@ -47,8 +47,10 @@ Se elige **Angular Reactive Forms** acompañado de **validadores puros reutiliza
 * **Aceptación/rechazo y verificación humana:** Aceptado y verificado frente a casos borde de casteo numérico en `IonInput`.
 
 ## Trazabilidad
-* Commit de ADR: `[Enlace o hash al commit en docs/adr/ADR-004-formularios-reactivos-validadores.md]`
-* Commit de implementación: `[Enlace o hash al commit de validadores en shared/validators]`
+* Commit de ADR: `900fd86` — agregó `docs/adr/ADR-004-formularios-reactivos-validadores.md`.
+* Commits de implementación:
+  * `518dec8` — validadores y pruebas en `src/app/shared/validators/cedula-ecuatoriana.validator.ts`, `src/app/shared/validators/cuadre-acta.validator.ts`, `src/app/shared/validators/nueva-password.validator.ts` y `src/app/shared/validators/validators.spec.ts`.
+  * `67a9e88` — formularios de inicio de sesión, cambio obligatorio y solicitud de recuperación en `src/app/features/auth/pages/`.
 
 ## Consenso del equipo
 * **Gabriel Emilio Toaquiza Saenz:** Expuso las validaciones críticas (cédula módulo 10, cuadre matemático de actas y cambio de clave), destacando reutilización, pruebas unitarias y control de estado.

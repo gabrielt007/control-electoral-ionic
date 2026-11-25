@@ -44,8 +44,8 @@ Condiciones técnicas obligatorias:
 * **Aceptación/rechazo y verificación humana:** Aceptado tras validar compatibilidad con requisitos R8–R9 y experiencia del grupo.
 
 ## Trazabilidad
-* Commit de ADR: `[Enlace o hash al commit en docs/adr/ADR-001-framework-ionic-angular.md]`
-* Commit de implementación: `[Enlace o hash al commit de inicialización del proyecto]`
+* Commit de ADR: `900fd86` — agregó `docs/adr/ADR-001-framework-ionic-angular.md`.
+* Commit de implementación: `900fd86` — inicializó Ionic Angular y Capacitor en `package.json`, `angular.json`, `capacitor.config.ts`, `src/main.ts` y `src/app/app.routes.ts`.
 
 ## Consenso del equipo
 * **Alex Mateo Barba Gavidia:** Propuso Angular Standalone destacando el dominio previo en el curso, formularios reactivos, guards por rol, servicios para R9 y mitigación de curva inicial mediante estructura común.

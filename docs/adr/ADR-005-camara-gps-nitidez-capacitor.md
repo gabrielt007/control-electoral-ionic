@@ -46,8 +46,11 @@ Condiciones técnicas:
 * **Aceptación/rechazo y verificación humana:** Aceptado tras comprobar que no requiere librerías externas y opera sin Internet.
 
 ## Trazabilidad
-* Commit de ADR: `[Enlace o hash al commit en docs/adr/ADR-005-camara-gps-nitidez-capacitor.md]`
-* Commit de implementación: `[Enlace o hash al commit de servicio cámara, GPS y nitidez]`
+* Commit de ADR: `900fd86` — agregó `docs/adr/ADR-005-camara-gps-nitidez-capacitor.md`.
+* Commits de implementación:
+  * `aa34077` — cámara, GPS, análisis de nitidez y pruebas en `src/app/core/services/camera-gps.service.ts` y `src/app/core/services/camera-gps.service.spec.ts`.
+  * `a0a64eb` — integración del registro de actas, almacenamiento de fotos y GPS en `src/app/features/veedor/` y `supabase/storage_actas.sql`.
+  * `57f4170` — corrección de actas y reemplazo de foto por el coordinador en `src/app/features/recinto/` y `supabase/recinto_coordinador.sql`.
 
 ## Consenso del equipo
 * **Emilia Alejandra Tana Puga:** Presentó la propuesta defendiendo plugins oficiales de Capacitor y validación local de nitidez con Canvas y varianza del Laplaciano sin Internet ni servicios externos.

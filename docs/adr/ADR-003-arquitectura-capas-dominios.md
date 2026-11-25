@@ -44,8 +44,12 @@ Se adopta una **arquitectura por dominios y capas** bajo `src/app/`:
 * **Aceptación/rechazo y verificación humana:** Aceptado y adaptado a la regla de prohibición de llamadas directas al backend desde páginas.
 
 ## Trazabilidad
-* Commit de ADR: `[Enlace o hash al commit en docs/adr/ADR-003-arquitectura-capas-dominios.md]`
-* Commit de implementación: `[Enlace o hash al commit de estructura base de carpetas]`
+* Commit de ADR: `900fd86` — agregó `docs/adr/ADR-003-arquitectura-capas-dominios.md`.
+* Commits de implementación:
+  * `ecb51f7` — modelos de dominio en `src/app/core/models/`.
+  * `2a5311d` — servicios transversales en `src/app/core/services/`.
+  * `7d162d2` — guards y manejo de errores en `src/app/core/guards/` y `src/app/core/services/error-handler.service.ts`.
+  * `57f4170` y `a0a64eb` — servicios y páginas organizados por dominio en `src/app/features/recinto/` y `src/app/features/veedor/`.
 
 ## Consenso del equipo
 * **Gabriel Emilio Toaquiza Saenz:** Presentó la propuesta destacando trazabilidad, bajo acoplamiento, prohibición de acceso directo al backend desde páginas y alineación con R4, R5, R6, R8 y R9.

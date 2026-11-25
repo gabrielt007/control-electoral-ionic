@@ -47,8 +47,14 @@ Condiciones técnicas obligatorias:
 * **Aceptación/rechazo y verificación humana:** Aceptado tras contrastar consultas SQL del dashboard y políticas RLS exigidas por R8.
 
 ## Trazabilidad
-* Commit de ADR: `[Enlace o hash al commit en docs/adr/ADR-002-backend-supabase.md]`
-* Commit de implementación: `[Enlace o hash al commit de esquema SQL y cliente Supabase]`
+* Commit de ADR: `900fd86` — agregó `docs/adr/ADR-002-backend-supabase.md`.
+* Commits de implementación:
+  * `e203107` — `supabase/schema.sql` y `supabase/seed.sql`.
+  * `cf167ec` — `supabase/rls_roles.sql`.
+  * `2a5311d` — cliente y sesión Supabase en `src/app/core/services/supabase.service.ts`, `src/app/core/services/auth.service.ts` y `supabase/rpc_auth.sql`.
+  * `a0a64eb` — bucket y políticas iniciales en `supabase/storage_actas.sql`.
+  * `57f4170` — `supabase/recinto_coordinador.sql` y `supabase/functions/crear-veedor/index.ts`.
+  * `7f807b5` — `supabase/provincial.sql` y `supabase/functions/crear-coordinador/index.ts`.
 
 ## Consenso del equipo
 * **Alex Mateo Barba Gavidia:** Propuso Supabase argumentando la naturaleza relacional de los datos, consultas SQL para el dashboard, seguridad RLS y almacenamiento gratuito, advirtiendo el límite de correos.
