@@ -13,11 +13,13 @@ const ROLES_USUARIO: readonly RolUsuario[] = ['PROVINCIAL', 'RECINTO', 'VEEDOR']
 })
 export class AuthService {
   private readonly supabase = inject(SupabaseService);
+  private readonly inicializacion: Promise<void>;
 
   readonly sesion = signal<Session | null>(null);
   readonly perfil = signal<Usuario | null>(null);
   readonly cargando = signal(false);
   readonly error = signal<string | null>(null);
+  readonly sesionInicializada = signal(false);
   readonly autenticado = computed(() => this.sesion() !== null);
   readonly debeCambiarPassword = computed(() => this.perfil()?.debe_cambiar_password ?? false);
 
@@ -33,6 +35,11 @@ export class AuthService {
         });
       }
     });
+    this.inicializacion = this.restaurarSesion();
+  }
+
+  esperarInicializacion(): Promise<void> {
+    return this.inicializacion;
   }
 
   iniciarSesion(cedula: string, password: string): Promise<Usuario> {
@@ -129,6 +136,28 @@ export class AuthService {
       this.perfil.set(data);
     }
     return data;
+  }
+
+  private async restaurarSesion(): Promise<void> {
+    try {
+      const { data, error } = await this.supabase.client.auth.getSession();
+      if (error) {
+        throw error;
+      }
+
+      this.sesion.set(data.session);
+      if (data.session) {
+        await this.cargarPerfil(data.session.user.id);
+      } else {
+        this.perfil.set(null);
+      }
+    } catch (error) {
+      this.registrarError(error);
+      this.sesion.set(null);
+      this.perfil.set(null);
+    } finally {
+      this.sesionInicializada.set(true);
+    }
   }
 
   private esUsuario(value: unknown): value is Usuario {
