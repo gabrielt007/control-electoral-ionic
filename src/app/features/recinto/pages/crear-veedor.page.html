@@ -1,0 +1,66 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Crear cuenta de veedor</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <main class="page-container">
+    <h1>Registrar veedor</h1>
+    <p class="description">
+      La cuenta quedará asociada a este recinto. El veedor no puede autorregistrarse y deberá cambiar su clave inicial
+      al ingresar.
+    </p>
+
+    <form [formGroup]="form" (ngSubmit)="crearCuenta()" novalidate>
+      <ion-item>
+        <ion-input
+          label="Cédula ecuatoriana"
+          labelPlacement="stacked"
+          formControlName="cedula"
+          type="text"
+          inputmode="numeric"
+          maxlength="10"
+          autocomplete="off"
+          aria-describedby="cedula-ayuda"
+          [attr.aria-invalid]="form.controls.cedula.touched && form.controls.cedula.invalid"
+        />
+      </ion-item>
+      <ion-note id="cedula-ayuda" class="field-help" color="medium">
+        Debe ser una cédula válida de 10 dígitos.
+      </ion-note>
+      @if (form.controls.cedula.touched && form.controls.cedula.hasError('required')) {
+      <ion-note class="field-error" color="danger" role="alert">Ingresa la cédula del veedor.</ion-note>
+      } @else if (form.controls.cedula.touched && form.controls.cedula.hasError('cedulaEcuatoriana')) {
+      <ion-note class="field-error" color="danger" role="alert">La cédula ecuatoriana no es válida.</ion-note>
+      }
+
+      <ion-item>
+        <ion-input
+          label="Correo electrónico"
+          labelPlacement="stacked"
+          formControlName="correo"
+          type="email"
+          inputmode="email"
+          autocomplete="email"
+          [attr.aria-invalid]="form.controls.correo.touched && form.controls.correo.invalid"
+        />
+      </ion-item>
+      @if (form.controls.correo.touched && form.controls.correo.invalid) {
+      <ion-note class="field-error" color="danger" role="alert">Ingresa un correo electrónico válido.</ion-note>
+      } @if (error(); as mensajeError) {
+      <ion-note class="form-message" color="danger" role="alert">{{ mensajeError }}</ion-note>
+      } @if (mensaje(); as mensajeCreado) {
+      <ion-note class="form-message" color="success" role="status" aria-live="polite">{{ mensajeCreado }}</ion-note>
+      }
+
+      <ion-button type="submit" expand="block" [disabled]="guardando()">
+        @if (guardando()) {
+        <ion-spinner name="crescent" slot="start" />
+        Creando cuenta... } @else { Crear cuenta de veedor }
+      </ion-button>
+    </form>
+
+    <ion-button fill="clear" routerLink="/recinto">Volver a mesas</ion-button>
+  </main>
+</ion-content>

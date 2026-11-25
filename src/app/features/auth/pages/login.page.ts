@@ -41,7 +41,9 @@ export class LoginPage {
         ? '/auth/cambiar-password'
         : perfil.rol === 'VEEDOR'
           ? '/veedor'
-          : '/home';
+          : perfil.rol === 'RECINTO'
+            ? '/recinto'
+            : '/home';
     } catch (error) {
       this.error.set(this.errorHandler.traducir(error));
       await this.errorHandler.mostrarError(error);

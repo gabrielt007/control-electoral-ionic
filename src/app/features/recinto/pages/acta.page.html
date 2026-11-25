@@ -1,0 +1,129 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Corregir acta</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <main class="page-container">
+    @if (cargando()) {
+    <div class="state-message" role="status" aria-live="polite">
+      <ion-spinner name="crescent" />
+      <span>Cargando acta...</span>
+    </div>
+    } @else if (contexto(); as datos) {
+    <h1>Corregir acta de {{ datos.dignidad === 'ALCALDIA' ? 'Alcaldía' : 'Prefectura' }}</h1>
+    <p class="description">Mesa {{ datos.mesa.numeroMesa }} · {{ datos.mesa.id }}</p>
+
+    <form [formGroup]="form" (ngSubmit)="guardar()" novalidate>
+      <ion-card>
+        <ion-card-content>
+          <h2>Votos y sufragantes</h2>
+          <div formGroupName="votos_organizaciones">
+            @for (organizacion of datos.organizaciones; track organizacion.id) {
+            <ion-item>
+              <ion-input
+                [label]="organizacion.nombre"
+                labelPlacement="stacked"
+                [formControlName]="organizacion.id"
+                type="number"
+                min="0"
+                inputmode="numeric"
+              />
+            </ion-item>
+            @if ( form.controls.votos_organizaciones.controls[organizacion.id].touched &&
+            form.controls.votos_organizaciones.controls[organizacion.id].invalid ) {
+            <ion-note class="field-error" color="danger" aria-live="polite">
+              Ingresa un número entero de votos igual o mayor a cero.
+            </ion-note>
+            } }
+          </div>
+
+          <ion-item>
+            <ion-input
+              label="Votos blancos"
+              labelPlacement="stacked"
+              formControlName="blancos"
+              type="number"
+              min="0"
+              inputmode="numeric"
+            />
+          </ion-item>
+          @if (form.controls.blancos.touched && form.controls.blancos.invalid) {
+          <ion-note class="field-error" color="danger">Ingresa un número entero igual o mayor a cero.</ion-note>
+          }
+
+          <ion-item>
+            <ion-input
+              label="Votos nulos"
+              labelPlacement="stacked"
+              formControlName="nulos"
+              type="number"
+              min="0"
+              inputmode="numeric"
+            />
+          </ion-item>
+          @if (form.controls.nulos.touched && form.controls.nulos.invalid) {
+          <ion-note class="field-error" color="danger">Ingresa un número entero igual o mayor a cero.</ion-note>
+          }
+
+          <ion-item>
+            <ion-input
+              label="Total de sufragantes"
+              labelPlacement="stacked"
+              formControlName="total_sufragantes"
+              type="number"
+              min="0"
+              inputmode="numeric"
+            />
+          </ion-item>
+          @if (form.controls.total_sufragantes.touched && form.controls.total_sufragantes.invalid) {
+          <ion-note class="field-error" color="danger">Ingresa un número entero igual o mayor a cero.</ion-note>
+          } @let cuadre = form.getError('cuadreActa'); @if (cuadre && form.touched) {
+          <ion-note class="field-error" color="danger" role="alert">
+            @if (cuadre.datosInvalidos) { Completa los cinco votos por organización y los totales. } @else { La suma de
+            votos es {{ cuadre.sumaVotos }} y debe coincidir con {{ cuadre.totalSufragantes }} sufragantes. }
+          </ion-note>
+          }
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card>
+        <ion-card-content>
+          <h2>Foto del acta</h2>
+          <p class="description">Puedes mantener la foto actual o cargar una imagen JPEG o PNG (máximo 10 MB).</p>
+          @if (fotoPreviewUrl(); as nuevaFoto) {
+          <img class="photo-preview" [src]="nuevaFoto" alt="Vista previa de la nueva foto del acta" />
+          <ion-note class="photo-label" color="medium">{{ fotoSeleccionada()?.name }}</ion-note>
+          } @else if (fotoFirmada(); as fotoActual) {
+          <img class="photo-preview" [src]="fotoActual" alt="Foto actual del acta" />
+          } @else {
+          <ion-note color="medium">No hay una foto disponible para mostrar.</ion-note>
+          }
+          <label class="file-label" for="foto-acta">Reemplazar foto</label>
+          <input id="foto-acta" type="file" accept="image/jpeg,image/png" (change)="seleccionarFoto($event)" />
+        </ion-card-content>
+      </ion-card>
+
+      @if (error(); as mensajeError) {
+      <ion-note class="form-message" color="danger" role="alert">{{ mensajeError }}</ion-note>
+      } @if (mensaje(); as mensajeGuardado) {
+      <ion-note class="form-message" color="success" role="status" aria-live="polite"> {{ mensajeGuardado }} </ion-note>
+      } @if (aviso(); as mensajeAviso) {
+      <ion-note class="form-message" color="warning" role="status" aria-live="polite">{{ mensajeAviso }}</ion-note>
+      }
+
+      <ion-button type="submit" expand="block" [disabled]="guardando()">
+        @if (guardando()) {
+        <ion-spinner name="crescent" slot="start" />
+        Guardando corrección... } @else { Guardar corrección }
+      </ion-button>
+    </form>
+
+    <ion-button fill="clear" routerLink="/recinto">Volver a mesas</ion-button>
+    } @else if (error(); as mensajeError) {
+    <ion-note color="danger" role="alert">{{ mensajeError }}</ion-note>
+    <ion-button fill="clear" routerLink="/recinto">Volver a mesas</ion-button>
+    }
+  </main>
+</ion-content>

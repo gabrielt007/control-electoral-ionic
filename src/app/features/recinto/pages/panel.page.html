@@ -1,0 +1,81 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Coordinación de recinto</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <main class="page-container">
+    @if (cargando()) {
+    <div class="state-message" role="status" aria-live="polite">
+      <ion-spinner name="crescent" />
+      <span>Cargando mesas y asignaciones...</span>
+    </div>
+    } @else if (panel(); as datos) {
+    <header class="page-heading">
+      <div>
+        <h1>{{ datos.recinto.nombre }}</h1>
+        <p class="description">
+          {{ datos.recinto.parroquia }}, {{ datos.recinto.canton }} · {{ datos.recinto.provincia }}
+        </p>
+      </div>
+      <ion-button routerLink="/recinto/veedores/nuevo">Crear cuenta de veedor</ion-button>
+    </header>
+
+    @if (error(); as mensajeError) {
+    <ion-note class="page-error" color="danger" role="alert">{{ mensajeError }}</ion-note>
+    } @if (datos.mesas.length === 0) {
+    <ion-note color="medium" role="status">Este recinto todavía no tiene mesas configuradas.</ion-note>
+    } @else {
+    <section class="mesa-list" aria-label="Mesas y estado de actas">
+      @for (mesa of datos.mesas; track mesa.id) {
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>Mesa {{ mesa.numeroMesa }}</ion-card-title>
+          <ion-card-subtitle>
+            {{ datos.recinto.parroquia }}, {{ datos.recinto.canton }} · {{ nombreVeedor(datos, mesa.veedorId) }}
+          </ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+          <label class="assignment-label" [for]="'veedor-' + mesa.id">Asignar veedor</label>
+          <ion-select
+            [id]="'veedor-' + mesa.id"
+            interface="action-sheet"
+            [value]="mesa.veedorId ?? ''"
+            [disabled]="mesaActualizando() === mesa.id"
+            (ionChange)="cambiarAsignacion($event, mesa)"
+            aria-label="Asignar o reasignar veedor para mesa {{ mesa.numeroMesa }}"
+          >
+            <ion-select-option value="">Sin asignar</ion-select-option>
+            @for (veedor of datos.veedores; track veedor.id) {
+            <ion-select-option [value]="veedor.id">{{ veedor.cedula }}</ion-select-option>
+            }
+          </ion-select>
+          @if (mesaActualizando() === mesa.id) {
+          <div class="inline-state" role="status"><ion-spinner name="crescent" /> Guardando asignación...</div>
+          }
+
+          <div class="acta-status">
+            @for (dignidad of dignidades; track dignidad.codigo) {
+            <div class="acta-row">
+              <span>
+                Acta de {{ dignidad.nombre }}:
+                <strong>{{ mesa.actas[dignidad.codigo] ? 'Registrada' : 'Pendiente' }}</strong>
+              </span>
+              @if (mesa.actas[dignidad.codigo]) {
+              <ion-button size="small" fill="outline" [routerLink]="['/recinto/jrv', mesa.id, 'acta', dignidad.codigo]">
+                Corregir
+              </ion-button>
+              }
+            </div>
+            }
+          </div>
+        </ion-card-content>
+      </ion-card>
+      }
+    </section>
+    } } @else if (error(); as mensajeError) {
+    <ion-note color="danger" role="alert">{{ mensajeError }}</ion-note>
+    }
+  </main>
+</ion-content>

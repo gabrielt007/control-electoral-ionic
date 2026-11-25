@@ -24,6 +24,7 @@ export const routes: Routes = [
   },
   {
     path: 'veedor',
+    pathMatch: 'full',
     canActivate: [authGuard, passwordChangedGuard, roleGuard(['VEEDOR'])],
     loadComponent: () => import('./features/veedor/pages/lista-jrv.page').then((m) => m.ListaJrvPage),
   },
@@ -31,6 +32,22 @@ export const routes: Routes = [
     path: 'veedor/jrv/:jrvId/acta/:dignidad',
     canActivate: [authGuard, passwordChangedGuard, roleGuard(['VEEDOR'])],
     loadComponent: () => import('./features/veedor/pages/acta.page').then((m) => m.ActaPage),
+  },
+  {
+    path: 'recinto',
+    pathMatch: 'full',
+    canActivate: [authGuard, passwordChangedGuard, roleGuard(['RECINTO'])],
+    loadComponent: () => import('./features/recinto/pages/panel.page').then((m) => m.PanelRecintoPage),
+  },
+  {
+    path: 'recinto/veedores/nuevo',
+    canActivate: [authGuard, passwordChangedGuard, roleGuard(['RECINTO'])],
+    loadComponent: () => import('./features/recinto/pages/crear-veedor.page').then((m) => m.CrearVeedorPage),
+  },
+  {
+    path: 'recinto/jrv/:jrvId/acta/:dignidad',
+    canActivate: [authGuard, passwordChangedGuard, roleGuard(['RECINTO'])],
+    loadComponent: () => import('./features/recinto/pages/acta.page').then((m) => m.ActaRecintoPage),
   },
   {
     path: '',
