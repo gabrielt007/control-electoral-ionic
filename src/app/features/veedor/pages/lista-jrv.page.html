@@ -1,0 +1,45 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Mis JRV asignadas</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <main class="page-container">
+    <h1>Mesas asignadas</h1>
+    <p class="description">Selecciona una JRV para registrar o corregir sus actas.</p>
+
+    @if (cargando()) {
+    <div class="state-message" role="status" aria-live="polite">
+      <ion-spinner name="crescent" />
+      <span>Cargando tus mesas asignadas...</span>
+    </div>
+    } @else if (error(); as mensajeError) {
+    <ion-note color="danger" role="alert">{{ mensajeError }}</ion-note>
+    } @else if (jrvs().length === 0) {
+    <ion-note color="medium" role="status">No tienes JRV asignadas por el momento.</ion-note>
+    } @else {
+    <section class="jrv-list" aria-label="JRV asignadas">
+      @for (jrv of jrvs(); track jrv.id) {
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>Mesa {{ jrv.numeroMesa }}</ion-card-title>
+          <ion-card-subtitle>
+            {{ jrv.recinto.nombre }} · {{ jrv.recinto.parroquia }}, {{ jrv.recinto.canton }}
+          </ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+          <div class="acta-actions">
+            @for (dignidad of dignidades; track dignidad.codigo) {
+            <ion-button expand="block" [routerLink]="['/veedor/jrv', jrv.id, 'acta', dignidad.codigo]">
+              {{ jrv.actas[dignidad.codigo] ? 'Corregir' : 'Registrar' }} acta de {{ dignidad.nombre }}
+            </ion-button>
+            }
+          </div>
+        </ion-card-content>
+      </ion-card>
+      }
+    </section>
+    }
+  </main>
+</ion-content>

@@ -1,0 +1,161 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Acta electoral</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <main class="page-container">
+    @if (cargando()) {
+    <div class="state-message" role="status" aria-live="polite">
+      <ion-spinner name="crescent" />
+      <span>Cargando los datos de la JRV...</span>
+    </div>
+    } @else if (contexto(); as datos) {
+    <h1>
+      {{ datos.acta ? 'Corregir' : 'Registrar' }} acta de {{ datos.dignidad === 'ALCALDIA' ? 'Alcaldía' : 'Prefectura'
+      }}
+    </h1>
+    <p class="description">
+      Mesa {{ datos.jrv.numeroMesa }} · {{ datos.jrv.recinto.nombre }} · {{ datos.jrv.recinto.parroquia }}, {{
+      datos.jrv.recinto.canton }}
+    </p>
+
+    @if (datos.acta) {
+    <ion-note color="medium" class="existing-record">
+      Ya existe un acta para esta dignidad. Al guardar, se corregirán sus datos.
+    </ion-note>
+    }
+
+    <form [formGroup]="form" (ngSubmit)="guardar()" novalidate>
+      <ion-card>
+        <ion-card-content>
+          <h2>Votos por organización</h2>
+          <div formGroupName="votos_organizaciones">
+            @for (organizacion of datos.organizaciones; track organizacion.id) {
+            <ion-item>
+              <ion-input
+                [label]="organizacion.nombre"
+                labelPlacement="stacked"
+                [formControlName]="organizacion.id"
+                type="number"
+                min="0"
+                inputmode="numeric"
+              />
+            </ion-item>
+            @if ( form.controls.votos_organizaciones.controls[organizacion.id].touched &&
+            form.controls.votos_organizaciones.controls[organizacion.id].invalid ) {
+            <ion-note class="field-error" color="danger" aria-live="polite">
+              Ingresa un número entero de votos igual o mayor a cero.
+            </ion-note>
+            } }
+          </div>
+
+          <ion-item>
+            <ion-input
+              label="Votos blancos"
+              labelPlacement="stacked"
+              formControlName="blancos"
+              type="number"
+              min="0"
+              inputmode="numeric"
+            />
+          </ion-item>
+          @if (form.controls.blancos.touched && form.controls.blancos.invalid) {
+          <ion-note class="field-error" color="danger" aria-live="polite">
+            Ingresa un número entero igual o mayor a cero.
+          </ion-note>
+          }
+
+          <ion-item>
+            <ion-input
+              label="Votos nulos"
+              labelPlacement="stacked"
+              formControlName="nulos"
+              type="number"
+              min="0"
+              inputmode="numeric"
+            />
+          </ion-item>
+          @if (form.controls.nulos.touched && form.controls.nulos.invalid) {
+          <ion-note class="field-error" color="danger" aria-live="polite">
+            Ingresa un número entero igual o mayor a cero.
+          </ion-note>
+          }
+
+          <ion-item>
+            <ion-input
+              label="Total de sufragantes"
+              labelPlacement="stacked"
+              formControlName="total_sufragantes"
+              type="number"
+              min="0"
+              inputmode="numeric"
+            />
+          </ion-item>
+          @if ( form.controls.total_sufragantes.touched && form.controls.total_sufragantes.invalid ) {
+          <ion-note class="field-error" color="danger" aria-live="polite">
+            Ingresa un número entero igual o mayor a cero.
+          </ion-note>
+          } @let cuadre = form.getError('cuadreActa'); @if (cuadre && form.touched) {
+          <ion-note class="field-error" color="danger" role="alert">
+            @if (cuadre.datosInvalidos) { Completa los cinco votos por organización y los totales. } @else { La suma de
+            votos es {{ cuadre.sumaVotos }} y debe coincidir con {{ cuadre.totalSufragantes }} sufragantes. }
+          </ion-note>
+          }
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card>
+        <ion-card-content>
+          <h2>Foto y ubicación</h2>
+          <p class="description">La foto debe superar el control de nitidez y guardarse con coordenadas GPS.</p>
+
+          @if (captura(); as foto) {
+          <img class="photo-preview" [src]="foto.fotoWebPath" alt="Foto nítida del acta capturada" />
+          <ion-note color="success" class="capture-details" role="status">
+            Nitidez {{ foto.nitidez | number: '1.0-1' }} · GPS {{ foto.latitud | number: '1.4-4' }}, {{ foto.longitud |
+            number: '1.4-4' }} (±{{ foto.precisionGps | number: '1.0-0' }} m)
+          </ion-note>
+          } @else {
+          <ion-note color="medium" class="capture-details" role="status">
+            Todavía no has capturado una foto validada.
+          </ion-note>
+          }
+
+          <ion-button
+            type="button"
+            expand="block"
+            fill="outline"
+            (click)="tomarFoto()"
+            [disabled]="capturando() || guardando()"
+          >
+            @if (capturando()) {
+            <ion-spinner name="crescent" slot="start" />
+            Validando foto y GPS... } @else { Capturar foto del acta }
+          </ion-button>
+        </ion-card-content>
+      </ion-card>
+
+      @if (error(); as mensajeError) {
+      <ion-note class="form-error" color="danger" role="alert">{{ mensajeError }}</ion-note>
+      } @if (mensaje(); as mensajeGuardado) {
+      <ion-note class="form-success" color="success" role="status" aria-live="polite"> {{ mensajeGuardado }} </ion-note>
+      } @if (aviso(); as mensajeAviso) {
+      <ion-note class="form-warning" color="warning" role="status" aria-live="polite"> {{ mensajeAviso }} </ion-note>
+      }
+
+      <ion-button type="submit" expand="block" [disabled]="guardando() || capturando()">
+        @if (guardando()) {
+        <ion-spinner name="crescent" slot="start" />
+        Subiendo foto y guardando... } @else { Guardar acta }
+      </ion-button>
+    </form>
+
+    <ion-button fill="clear" routerLink="/veedor">Volver a mis JRV</ion-button>
+    } @else if (error(); as mensajeError) {
+    <ion-note color="danger" role="alert">{{ mensajeError }}</ion-note>
+    <ion-button fill="clear" routerLink="/veedor">Volver a mis JRV</ion-button>
+    }
+  </main>
+</ion-content>

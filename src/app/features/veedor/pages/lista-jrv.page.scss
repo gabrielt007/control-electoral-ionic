@@ -1,0 +1,36 @@
+.page-container {
+  width: min(100%, 880px);
+  margin: 0 auto;
+  padding: 24px 16px 40px;
+}
+
+h1 {
+  margin: 0;
+  font-size: 1.65rem;
+}
+
+.description {
+  margin: 8px 0 24px;
+  color: var(--ion-color-medium);
+}
+
+.jrv-list {
+  display: grid;
+  gap: 12px;
+}
+
+ion-card {
+  margin: 0;
+}
+
+.acta-actions {
+  display: grid;
+  gap: 8px;
+}
+
+.state-message {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--ion-color-medium);
+}

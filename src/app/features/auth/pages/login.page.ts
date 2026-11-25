@@ -37,7 +37,11 @@ export class LoginPage {
     try {
       const { cedula, password } = this.form.getRawValue();
       const perfil = await this.auth.iniciarSesion(cedula, password);
-      rutaDestino = perfil.debe_cambiar_password ? '/auth/cambiar-password' : '/home';
+      rutaDestino = perfil.debe_cambiar_password
+        ? '/auth/cambiar-password'
+        : perfil.rol === 'VEEDOR'
+          ? '/veedor'
+          : '/home';
     } catch (error) {
       this.error.set(this.errorHandler.traducir(error));
       await this.errorHandler.mostrarError(error);
