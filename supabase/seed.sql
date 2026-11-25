@@ -62,3 +62,15 @@ DO UPDATE SET
   organizacion_id = EXCLUDED.organizacion_id,
   nombre_completo = EXCLUDED.nombre_completo,
   dignidad = EXCLUDED.dignidad;
+
+INSERT INTO public.jrv (recinto_id, numero_mesa, veedor_id)
+SELECT
+  r.id,
+  gs.mesa,
+  NULL
+FROM public.recintos AS r
+CROSS JOIN generate_series(1, r.cantidad_jrv) AS gs(mesa)
+WHERE r.provincia = 'Pichincha'
+  AND r.canton = 'Quito'
+  AND r.nombre = 'Recinto Electoral Demostrativo'
+ON CONFLICT (recinto_id, numero_mesa) DO NOTHING;
