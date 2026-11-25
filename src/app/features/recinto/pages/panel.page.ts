@@ -1,6 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import type { OnInit } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import {
   IonButton,
   IonCard,
@@ -19,6 +19,7 @@ import {
 } from '@ionic/angular';
 
 import type { DignidadElectoral } from '../../../core/models/acta.model';
+import { AuthService } from '../../../core/services/auth.service';
 import { ErrorHandlerService } from '../../../core/services/error-handler.service';
 import type { MesaRecinto, PanelRecinto } from '../services/recinto.service';
 import { RecintoService } from '../services/recinto.service';
@@ -49,6 +50,8 @@ import { RecintoService } from '../services/recinto.service';
 export class PanelRecintoPage implements OnInit {
   private readonly recintoService = inject(RecintoService);
   private readonly errorHandler = inject(ErrorHandlerService);
+  private readonly auth = inject(AuthService);
+  private readonly router = inject(Router);
 
   readonly panel = signal<PanelRecinto | null>(null);
   readonly cargando = signal(true);
@@ -61,6 +64,16 @@ export class PanelRecintoPage implements OnInit {
 
   ngOnInit(): void {
     void this.cargarPanel();
+  }
+
+  async cerrarSesion(): Promise<void> {
+    try {
+      await this.auth.cerrarSesion();
+      await this.router.navigateByUrl('/auth/login');
+    } catch (error) {
+      this.error.set(this.errorHandler.traducir(error));
+      await this.errorHandler.mostrarError(error);
+    }
   }
 
   async cambiarAsignacion(event: CustomEvent<{ value: string }>, mesa: MesaRecinto): Promise<void> {

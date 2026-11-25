@@ -1,0 +1,88 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Resultados provinciales</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <main class="page-container">
+    <header class="page-heading">
+      <div>
+        <h1>Votos consolidados por candidato</h1>
+        <p class="description">Los resultados se agregan desde las actas registradas en cada recinto.</p>
+      </div>
+      <ion-button fill="outline" routerLink="/provincial/recintos">Volver a recintos</ion-button>
+    </header>
+
+    @if (error(); as mensajeError) {
+    <ion-note class="page-error" color="danger" role="alert">{{ mensajeError }}</ion-note>
+    }
+
+    <section class="filters" aria-label="Filtros de resultados">
+      <ion-select
+        label="Recinto"
+        labelPlacement="stacked"
+        interface="action-sheet"
+        [value]="filtroRecinto()"
+        (ionChange)="cambiarRecinto($event)"
+      >
+        <ion-select-option value="">Total provincial</ion-select-option>
+        @for (recinto of recintos(); track recinto.id) {
+        <ion-select-option [value]="recinto.id">{{ recinto.nombre }}</ion-select-option>
+        }
+      </ion-select>
+
+      <ion-select
+        label="Dignidad"
+        labelPlacement="stacked"
+        interface="action-sheet"
+        [value]="filtroDignidad()"
+        (ionChange)="cambiarDignidad($event)"
+      >
+        <ion-select-option value="TODAS">Todas</ion-select-option>
+        <ion-select-option value="ALCALDIA">Alcaldía</ion-select-option>
+        <ion-select-option value="PREFECTURA">Prefectura</ion-select-option>
+      </ion-select>
+    </section>
+
+    @if (cargando()) {
+    <div class="state-message" role="status" aria-live="polite">
+      <ion-spinner name="crescent" />
+      <span>Calculando votos consolidados...</span>
+    </div>
+    } @else {
+    <ion-card>
+      <ion-card-content>
+        <p class="total-label">{{ filtroRecinto() ? 'Votos del recinto seleccionado' : 'Total provincial' }}</p>
+        <p class="total-value">{{ votosTotales() | number }}</p>
+      </ion-card-content>
+    </ion-card>
+
+    @if (resultados().length === 0) {
+    <ion-note color="medium" role="status">No hay votos registrados para los filtros seleccionados.</ion-note>
+    } @else {
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Dignidad</th>
+            <th scope="col">Candidato</th>
+            <th scope="col">Organización</th>
+            <th scope="col" class="numeric">Votos</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (resultado of resultados(); track resultado.candidatoId) {
+          <tr>
+            <td>{{ resultado.dignidad === 'ALCALDIA' ? 'Alcaldía' : 'Prefectura' }}</td>
+            <td>{{ resultado.candidatoNombre }}</td>
+            <td>{{ resultado.organizacionCodigo }} · {{ resultado.organizacionNombre }}</td>
+            <td class="numeric">{{ resultado.votos | number }}</td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    } }
+  </main>
+</ion-content>

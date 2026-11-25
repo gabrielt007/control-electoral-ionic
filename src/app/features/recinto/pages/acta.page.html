@@ -101,7 +101,13 @@
           <ion-note color="medium">No hay una foto disponible para mostrar.</ion-note>
           }
           <label class="file-label" for="foto-acta">Reemplazar foto</label>
-          <input id="foto-acta" type="file" accept="image/jpeg,image/png" (change)="seleccionarFoto($event)" />
+          <input
+            id="foto-acta"
+            type="file"
+            accept="image/jpeg,image/png"
+            capture="environment"
+            (change)="seleccionarFoto($event)"
+          />
         </ion-card-content>
       </ion-card>
 

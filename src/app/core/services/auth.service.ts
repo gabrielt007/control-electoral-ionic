@@ -115,6 +115,8 @@ export class AuthService {
       if (error) {
         throw error;
       }
+      this.sesion.set(null);
+      this.perfil.set(null);
     });
   }
 

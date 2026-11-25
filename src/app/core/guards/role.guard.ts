@@ -3,6 +3,7 @@ import type { CanActivateFn } from '@angular/router';
 import { Router } from '@angular/router';
 
 import type { RolUsuario } from '../models/usuario.model';
+import { rutaPrincipalPorRol } from '../routing/role-route';
 import { AuthService } from '../services/auth.service';
 
 export function roleGuard(rolesPermitidos: readonly RolUsuario[]): CanActivateFn {
@@ -20,6 +21,6 @@ export function roleGuard(rolesPermitidos: readonly RolUsuario[]): CanActivateFn
       return router.parseUrl('/auth/cambiar-password');
     }
 
-    return rolesPermitidos.includes(perfil.rol) ? true : router.parseUrl('/home');
+    return rolesPermitidos.includes(perfil.rol) ? true : router.parseUrl(rutaPrincipalPorRol(perfil.rol));
   };
 }

@@ -6,6 +6,9 @@
       </ion-text>
       <h1 id="login-title">Iniciar sesión</h1>
       <p class="description">Ingresa con tu cédula y clave asignada.</p>
+      @if (confirmacion(); as mensajeConfirmacion) {
+      <ion-note color="success" role="status" aria-live="polite">{{ mensajeConfirmacion }}</ion-note>
+      }
 
       <form [formGroup]="form" (ngSubmit)="ingresar()" novalidate>
         <ion-item>

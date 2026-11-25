@@ -1,0 +1,198 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Coordinación provincial</ion-title>
+    <ion-button slot="end" fill="clear" color="light" (click)="cerrarSesion()">Salir</ion-button>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <main class="page-container">
+    <header class="page-heading">
+      <div>
+        <h1>Recintos electorales</h1>
+        <p class="description">Gestiona recintos, coordinadores y avance de actas.</p>
+      </div>
+      <ion-button routerLink="/provincial/votos">Dashboard de votos</ion-button>
+    </header>
+
+    @if (error(); as mensajeError) {
+    <ion-note class="page-message" color="danger" role="alert">{{ mensajeError }}</ion-note>
+    } @if (mensaje(); as mensajeAccion) {
+    <ion-note class="page-message" color="success" role="status" aria-live="polite">{{ mensajeAccion }}</ion-note>
+    }
+
+    <section class="forms-grid" aria-label="Gestión provincial">
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>Crear recinto</ion-card-title>
+          <ion-card-subtitle>Se crearán también sus mesas electorales.</ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+          <form [formGroup]="recintoForm" (ngSubmit)="crearRecinto()" novalidate>
+            <ion-item>
+              <ion-input label="Provincia" labelPlacement="stacked" formControlName="provincia" />
+            </ion-item>
+            @if (recintoForm.controls.provincia.touched && recintoForm.controls.provincia.invalid) {
+            <ion-note class="field-error" color="danger">Ingresa una provincia.</ion-note>
+            }
+            <ion-item>
+              <ion-input label="Cantón" labelPlacement="stacked" formControlName="canton" />
+            </ion-item>
+            @if (recintoForm.controls.canton.touched && recintoForm.controls.canton.invalid) {
+            <ion-note class="field-error" color="danger">Ingresa un cantón.</ion-note>
+            }
+            <ion-item>
+              <ion-input label="Parroquia" labelPlacement="stacked" formControlName="parroquia" />
+            </ion-item>
+            @if (recintoForm.controls.parroquia.touched && recintoForm.controls.parroquia.invalid) {
+            <ion-note class="field-error" color="danger">Ingresa una parroquia.</ion-note>
+            }
+            <ion-item>
+              <ion-input label="Nombre del recinto" labelPlacement="stacked" formControlName="nombre" />
+            </ion-item>
+            @if (recintoForm.controls.nombre.touched && recintoForm.controls.nombre.invalid) {
+            <ion-note class="field-error" color="danger">Ingresa el nombre del recinto.</ion-note>
+            }
+            <ion-item>
+              <ion-input
+                label="Cantidad de JRV"
+                labelPlacement="stacked"
+                formControlName="cantidadJrv"
+                type="number"
+                min="1"
+                inputmode="numeric"
+              />
+            </ion-item>
+            @if (recintoForm.controls.cantidadJrv.touched && recintoForm.controls.cantidadJrv.invalid) {
+            <ion-note class="field-error" color="danger">Ingresa una cantidad entera mayor a cero.</ion-note>
+            }
+            <ion-button type="submit" expand="block" [disabled]="guardandoRecinto()">
+              @if (guardandoRecinto()) {
+              <ion-spinner name="crescent" slot="start" />
+              Creando recinto... } @else { Crear recinto y JRV }
+            </ion-button>
+          </form>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>Crear coordinador</ion-card-title>
+          <ion-card-subtitle>Se asignará al recinto seleccionado.</ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+          @if (recintosSinCoordinador().length === 0) {
+          <ion-note color="medium">Todos los recintos registrados ya tienen coordinador.</ion-note>
+          } @else {
+          <form [formGroup]="coordinadorForm" (ngSubmit)="crearCoordinador()" novalidate>
+            <ion-item>
+              <ion-select label="Recinto" labelPlacement="stacked" formControlName="recintoId" interface="action-sheet">
+                @for (recinto of recintosSinCoordinador(); track recinto.id) {
+                <ion-select-option [value]="recinto.id">
+                  {{ recinto.nombre }} · {{ recinto.parroquia }}, {{ recinto.canton }}
+                </ion-select-option>
+                }
+              </ion-select>
+            </ion-item>
+            @if (coordinadorForm.controls.recintoId.touched && coordinadorForm.controls.recintoId.invalid) {
+            <ion-note class="field-error" color="danger">Selecciona un recinto.</ion-note>
+            }
+            <ion-item>
+              <ion-input
+                label="Cédula ecuatoriana"
+                labelPlacement="stacked"
+                formControlName="cedula"
+                type="text"
+                inputmode="numeric"
+                maxlength="10"
+                autocomplete="off"
+              />
+            </ion-item>
+            @if (coordinadorForm.controls.cedula.touched && coordinadorForm.controls.cedula.invalid) {
+            <ion-note class="field-error" color="danger">Ingresa una cédula ecuatoriana válida.</ion-note>
+            }
+            <ion-item>
+              <ion-input
+                label="Correo electrónico"
+                labelPlacement="stacked"
+                formControlName="correo"
+                type="email"
+                inputmode="email"
+                autocomplete="email"
+              />
+            </ion-item>
+            @if (coordinadorForm.controls.correo.touched && coordinadorForm.controls.correo.invalid) {
+            <ion-note class="field-error" color="danger">Ingresa un correo electrónico válido.</ion-note>
+            }
+            <ion-button type="submit" expand="block" [disabled]="guardandoCoordinador()">
+              @if (guardandoCoordinador()) {
+              <ion-spinner name="crescent" slot="start" />
+              Creando cuenta... } @else { Crear y asignar coordinador }
+            </ion-button>
+          </form>
+          }
+        </ion-card-content>
+      </ion-card>
+    </section>
+
+    <section class="recinto-list" aria-label="Recintos y avance de actas">
+      <h2>Avance por recinto</h2>
+      @if (cargando()) {
+      <div class="state-message" role="status" aria-live="polite">
+        <ion-spinner name="crescent" />
+        <span>Cargando recintos y actas...</span>
+      </div>
+      } @else if (recintos().length === 0) {
+      <ion-note color="medium" role="status">No hay recintos registrados.</ion-note>
+      } @else { @for (recinto of recintos(); track recinto.id) {
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>{{ recinto.nombre }}</ion-card-title>
+          <ion-card-subtitle>
+            {{ recinto.provincia }} · {{ recinto.canton }} · {{ recinto.parroquia }}
+          </ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+          <p>Coordinador: <strong>{{ nombreCoordinador(recinto) }}</strong></p>
+          <p>
+            Actas registradas: <strong>{{ recinto.actasRegistradas }} / {{ recinto.actasEsperadas }}</strong>
+            ({{ porcentajeAvance(recinto) }}%)
+          </p>
+          <progress [value]="recinto.actasRegistradas" [max]="recinto.actasEsperadas || 1">
+            {{ porcentajeAvance(recinto) }}%
+          </progress>
+
+          <div class="mesa-list">
+            @for (mesa of recinto.mesas; track mesa.id) {
+            <section class="mesa-row">
+              <h3>Mesa {{ mesa.numeroMesa }}</h3>
+              @for (dignidad of dignidades; track dignidad.codigo) {
+              <div class="acta-row">
+                <strong>{{ dignidad.nombre }}:</strong>
+                @if (mesa.actas[dignidad.codigo]; as acta) {
+                <span>Registrada · {{ acta.updated_at | date: 'short' }}</span>
+                @if (acta.latitud !== null && acta.longitud !== null) {
+                <a
+                  class="gps-link"
+                  [href]="'https://maps.google.com/?q=' + acta.latitud + ',' + acta.longitud"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  GPS {{ acta.latitud }}, {{ acta.longitud }}
+                </a>
+                } @else {
+                <span class="no-gps">Sin coordenadas GPS</span>
+                } } @else {
+                <span class="pending">Pendiente</span>
+                }
+              </div>
+              }
+            </section>
+            }
+          </div>
+        </ion-card-content>
+      </ion-card>
+      } }
+    </section>
+  </main>
+</ion-content>

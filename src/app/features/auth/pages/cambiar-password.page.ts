@@ -45,12 +45,13 @@ export class CambiarPasswordPage {
     this.error.set(null);
     try {
       await this.auth.cambiarPasswordInicial(this.form.controls.nuevaPassword.value);
+      await this.auth.cerrarSesion();
     } catch (error) {
       this.error.set(this.errorHandler.traducir(error));
       await this.errorHandler.mostrarError(error);
       return;
     }
 
-    await this.router.navigateByUrl('/home');
+    await this.router.navigateByUrl('/auth/login?passwordChanged=true');
   }
 }

@@ -2,6 +2,7 @@ import type { Routes } from '@angular/router';
 
 import { authGuard } from './core/guards/auth.guard';
 import { passwordChangedGuard } from './core/guards/password-changed.guard';
+import { roleHomeGuard } from './core/guards/role-home.guard';
 import { roleGuard } from './core/guards/role.guard';
 
 export const routes: Routes = [
@@ -20,6 +21,7 @@ export const routes: Routes = [
   },
   {
     path: 'home',
+    canActivate: [roleHomeGuard],
     loadComponent: () => import('./home/home.page').then((m) => m.HomePage),
   },
   {
@@ -50,12 +52,29 @@ export const routes: Routes = [
     loadComponent: () => import('./features/recinto/pages/acta.page').then((m) => m.ActaRecintoPage),
   },
   {
-    path: '',
-    redirectTo: 'auth/login',
+    path: 'provincial',
     pathMatch: 'full',
+    redirectTo: 'provincial/recintos',
+  },
+  {
+    path: 'provincial/recintos',
+    canActivate: [authGuard, passwordChangedGuard, roleGuard(['PROVINCIAL'])],
+    loadComponent: () => import('./features/provincial/pages/recintos.page').then((m) => m.RecintosPage),
+  },
+  {
+    path: 'provincial/votos',
+    canActivate: [authGuard, passwordChangedGuard, roleGuard(['PROVINCIAL'])],
+    loadComponent: () => import('./features/provincial/pages/votos.page').then((m) => m.VotosProvincialPage),
+  },
+  {
+    path: '',
+    canActivate: [roleHomeGuard],
+    pathMatch: 'full',
+    loadComponent: () => import('./home/home.page').then((m) => m.HomePage),
   },
   {
     path: '**',
-    redirectTo: 'auth/login',
+    canActivate: [roleHomeGuard],
+    loadComponent: () => import('./home/home.page').then((m) => m.HomePage),
   },
 ];

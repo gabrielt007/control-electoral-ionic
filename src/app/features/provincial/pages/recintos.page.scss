@@ -1,0 +1,89 @@
+.page-container {
+  margin: 0 auto;
+  max-width: 1100px;
+  padding: 1.25rem;
+}
+
+.page-heading {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+h1 {
+  font-size: 1.6rem;
+  margin: 0;
+}
+
+h2 {
+  font-size: 1.3rem;
+  margin: 1.5rem 0 0.75rem;
+}
+
+h3 {
+  font-size: 1rem;
+  margin: 0 0 0.5rem;
+}
+
+.description,
+.no-gps {
+  color: var(--ion-color-medium);
+}
+
+.forms-grid {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+}
+
+.page-message,
+.field-error {
+  display: block;
+  margin: 0.5rem 0;
+}
+
+.state-message {
+  align-items: center;
+  display: flex;
+  gap: 0.75rem;
+  padding: 1rem 0;
+}
+
+.recinto-list {
+  margin-top: 1.5rem;
+}
+
+.mesa-list {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.mesa-row {
+  border-top: 1px solid var(--ion-color-light-shade);
+  padding-top: 0.75rem;
+}
+
+.acta-row {
+  align-items: baseline;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  margin: 0.5rem 0;
+}
+
+.gps-link {
+  color: var(--ion-color-primary);
+}
+
+.pending {
+  color: var(--ion-color-warning-shade);
+}
+
+progress {
+  height: 0.75rem;
+  width: 100%;
+}
